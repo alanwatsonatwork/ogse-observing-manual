@@ -1,9 +1,10 @@
+.DS_Store
+main.pdf
 *.synctex.gz
 *.fdb_latexmk
-main.pdf
 *.fls
-*.aux
+*.aux                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 *.log
 *.out
 *.toc
-*.xdv
+*.xdv            
