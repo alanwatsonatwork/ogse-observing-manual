@@ -1,0 +1,73 @@
+\chapter{Introduction}
+
+\section{About This Manual}
+
+This observing manual describes the OGSE instrument on the COLIBRÍ telescope. 
+
+This first chapter contains an overview of the instrument. The second chapter is a brief description of observations with OGSE and should help you plan your observations. The remaining chapters describe aspects of OGSE in more detail and may be useful during the analysis of data taken with OGSE, particularly if you reduce your own data rather than using one of the data pipelines.
+
+The latest version of this manual is available at:
+
+\begin{quote}
+\url{https://bit.ly/3XIkKQJ}
+\end{quote}
+
+If you have comments on this manual, please send them to the authors at the addresses on the cover page.
+
+\section{Overview of OGSE}
+
+\begin{table}
+\centering
+\caption{An Overview of OGSE}
+\label{table:overview}
+\medskip
+\begin{tabular}{lp{0.75\linewidth}}
+\toprule
+Telescope&1.3-meter COLIBRÍ alt-az\\
+Longitude& 115.4646~{\deg} east\\
+Latitude&31.0449~{\deg} north\\
+Altitude& 2792 m\\
+Pointing Limits&1.0 to 73.4~{deg} in zenith distance\\
+Channels&Single\\
+Detectors&One $4\mathrm{k}\times4\mathrm{k}$ front-illuminated CCD\\
+Pixel Scale&0.20 arcsec\\
+Field&13.6 arcmin\\
+Filters&Fixed red filter\\
+Sensitivity&10$\sigma$ at $\AB \approx TBD$ in 60 seconds in bright time\\
+Read Time&TBD seconds, depending on binning and window\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+OGSE is a single-channel optical imager for the 1.3-meter COLIBRÍ telescope at the Observatorio Astronómico Nacional. It is intended to be a simple camera for testing and engineering purposes, but has occasionally been used for science. It is mounted on one of the Nasmyth foci of the telescope; the DDRAGO instrument is mount on the other one.
+
+The instrument uses front-illuminated ONSEMI KAF-16803 CCD in an FLI MK1603 housing. The detector has a format of $4\mathrm{k}\times4\mathrm{k}$ with 9~{\micron} pixels. The nominal pixel scale is 0.20 \unit{arcsec/pixel} and the nominal field size is 13.6 \unit{armin}. The CCD is normally used binned $2\times2$ to give 0.40 \unit{arcsec/pixel}. The peak QE of the detector is about 50\% at 550 nm and falls to about 40\% at 700 nm. The detector is normally cooled to $-20$~\unit{C}.
+
+The instrument has a fixed red filter from Baader that extends from 590 to 690 nm. As such, it is narrower and redder than the standard SDSS/Pan-STARRS $r$ filter, which extends from 550 to 700 nm. 
+
+\section{Current State of OGSE}
+
+The instrument was installed in June. The current state of the instrument and its associated systems is as follows:
+
+\begin{itemize}
+
+\item 
+The OGSE operational and works as expected. 
+
+\item 
+The telescope is operational and, with the exception of the alignment issues mentioned below, works as expected. 
+
+\item
+We have not completed optical alignment of the telescope. 
+
+Nevertheless, the instrument has given images with FWHM of 0.8 arcsec in the center of the field. 
+
+\item
+The automatic data-processing pipeline is not yet available. It is quite possible that it will not be available before June 2025. 
+
+However, we have an engineering pipeline that is capable of stacking images and doing a simple sky subtraction. It requires some manual tuning (selecting a star for alignment and determining the fraction of frames to reject). It does not perform astrometric or photometric calibration or produce source catalogs. If you are interested in this pipeline, please contact Alan Watson <\href{mailto:alan@astro.unam.mx}{alan@astro.unam.mx}> directly.
+
+\item
+The scheduler is not yet fully integrated. Observations have to be programmed by hand, which limits flexibility and favors blocks that are simpler to program.
+
+\end{itemize}
