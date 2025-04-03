@@ -1,0 +1,171 @@
+\chapter{Detector}
+
+The instrument uses an FLI ML 16803 CCD detector system with a frontside-illuminated ONSEMI KAF-16803 CCD. This detector has a format of $4\mathrm{k}\times4\mathrm{k}$ with 9~{\micron} pixels. It is cooled by a TEC. The detector has an integrated shutter.
+
+\section{Read Modes}
+
+The controller offers a single read mode with a read frequency of 8~MHz and a default gain. This gives a readout time of about 3.5 seconds (when the detector is binned $2\times2$), a read noise of about 15 electrons, a gain of about 1.5 electrons per DN, and a full well of about 100,000 electrons.
+
+\section{Format}
+
+% \begin{figure}[p]
+% \begin{center}
+% \begin{tikzpicture}[scale=24]
+% \draw (-0.2098,-0.2056) -- (+0.2098,-0.2056) -- (+0.2098,+0.2056) -- (-0.2098,+0.2056) -- cycle;
+% \draw (-0.2048,-0.2056) -- (+0.2048,-0.2056) -- (+0.2048,+0.2056) -- (-0.2048,+0.2056) -- cycle;
+% \draw [dotted] (-0.2098,0) -- (+0.2098,0);
+% \draw [dotted] (0,-0.2056) -- (0,+0.2056);
+% \draw[->] (-0.025,-0.025) -- (-0.025,-0.175) -- (-0.175,-0.175);
+% \draw[->] (+0.025,-0.025) -- (+0.025,-0.175) -- (+0.175,-0.175);
+% \draw[->] (-0.025,+0.025) -- (-0.025,+0.175) -- (-0.175,+0.175);
+% \draw[->] (+0.025,+0.025) -- (+0.025,+0.175) -- (+0.175,+0.175);
+% \draw (-0.12,-0.12) node {0};
+% \draw (+0.12,-0.12) node {1};
+% \draw (-0.12,+0.12) node {2};
+% \draw (+0.12,+0.12) node {3};
+% \draw[->] (-0.2,-0.25) -- (+0.2,-0.25) node [anchor=west] {$x$};
+% \draw[->] (-0.25,-0.2) -- (-0.25,+0.2) node [anchor=south] {$y$};
+% \draw[dashed] (-0.2096,-0.2048) -- (-0.2096,+0.2048) -- (+0.2096,+0.2048) -- (+0.2096,-0.2048) -- cycle; 
+% \draw[dashed] (-0.1024,-0.1024) -- (-0.1024,+0.1024) -- (+0.1024,+0.1024) -- (+0.1024,-0.1024) -- cycle; 
+% \draw[dashed] (-0.0512,-0.0512) -- (-0.0512,+0.0512) -- (+0.0512,+0.0512) -- (+0.0512,-0.0512) -- cycle; 
+% \end{tikzpicture}
+% \caption{The format of the CCD. The full format has an active area of $4096~\mbox{columns} \times 4112~\mbox{rows}$ and with 50 columns of underscan at the start and end of each row, giving a total format of $4196~\mbox{columns} \times 4112~\mbox{rows}$. It is read in four quadrants, as shown by the dotted line and the arrows. The parallel clocks move charge vertically, and the serial clocks move charge horizontally. The quadrants are numbered 0 to 3 as shown. The dashed lines show the \code{4kx4k}, \code{2kx2k}, and \code{1kx1k} windows.}
+% \label{figure:format}
+% \end{center}
+% \end{figure}
+
+The detector has a active area of  $4096~\mbox{columns} \times 4096~\mbox{rows}$. The controller by default reads $4152~\mbox{columns} \times 4128~\mbox{rows}$ divided into two halves. 
+
+% This is shown in Figure~\ref{figure:format}.
+
+Each quadrant of the detector has slightly different bias level and gain, and this gives a clear pattern in raw exposures. However, subtracting the underscan level and residual bias and dividing by a flat field largely removes these differences.
+
+The controller allows us to define windows provided they are centered on the detector. We define three windows that we expect will be useful for science, named \code{4kx4k}, \code{2kx2k}, and \code{1kx1k}, described below.
+% and shown in Figure~\ref{figure:format}. 
+Each window can be used with a binning of 1, 2, or 4 pixels (both vertically and horizontally).
+
+\begin{itemize}
+\item 
+The \code{4kx4k} window has an active area of $4096~\mbox{columns} \times 4096~\mbox{rows}$, with 36 columns of underscan at the start and 20 at the end of each row and with 22 rows of underscan at the start of each column and 10 at the end giving a total size of $4152~\mbox{columns} \times 4128~\mbox{rows}$.
+\item
+The \code{2kx2k} window has an active area of $2048~\mbox{columns} \times 2048~\mbox{rows}$, centered on the detector, without underscan.
+\item
+The \code{1kx1k} window has an active area of $1024~\mbox{columns} \times 1024~\mbox{rows}$, centered on the detector, without underscan.
+\end{itemize}
+
+\begin{table}[pb]
+\begin{center}
+\caption{Detector Overhead Times}
+\label{table:detector-overhead-times}
+\medskip    
+\begin{tabular}{ccc}
+\hline
+Window&Binning&Overhead\\
+&&\unit{s}\\
+\hline
+\code{4kx4k}&1&4.5\\
+\code{4kx4k}&2&3.7\\
+\code{4kx4k}&4&3.2\\
+\code{2kx2k}&1&2.6\\
+\code{2kx2k}&2&1.9\\
+\code{2kx2k}&4&1.6\\
+\code{1kx1k}&1&1.3\\
+\code{1kx1k}&2&1.3\\
+\code{1kx1k}&4&1.0\\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+We anticipate that almost all science will use the standard \code{4kx4k} window with a binning of 1. The other windows and binnings are likely to be of interest only for fast (or at least faster) photometry, and their use requires making special arrangements with the science operations team.
+
+Table~\ref{table:detector-overhead-times} shows the measured overhead times (reset, read, and other overheads associated with each exposure) for each of the windows and binnings. The overhead for the standard \code{4kx4k} window with a binning of 2 is about 3.7 seconds. The fastest combination is the \code{4kx4k} window with a binning of 4 (i.e., pixels of 0.8 arcsec), which has an overhead of 1.0 seconds.
+
+WORKING HERE
+
+\section{Bias and Dark Correction}
+
+\subsection{Bias Pedestal Removal}
+
+Table~\ref{table:detector-slices} shows the slices corresponding to each quadrant, underscan region, and data region. These are given as Python slices; to convert them into IRAF sections, reverse the order and add one to the first index. For other binnings, divide all numbers by the binning.
+
+The procedure for removing the bias pedestal level from \code{4kx4k} images and extracting the data region is:
+\begin{itemize}
+\item Determine the mean value in the underscan slice in each quadrant.
+\item Subtract these values from the whole quadrant slice.
+\item Extract either the individual data slices for each quadrant or the combined data slice for all quadrants.
+\end{itemize}
+
+This procedure is carried out automatically by the COLIBRÍ pipeline.
+
+\begin{table}[pb]
+\begin{center}
+\caption{Detector Quadrant, Underscan, and Data Slices}
+\label{table:detector-slices}
+\medskip    
+\tiny
+\begin{tabular}{cccccc}
+\hline
+Window&Binning&Quadrant&Quadrant&Underscan&Data\\
+\hline
+\code{4kx4k}&1&0
+  &\wbox{0000}{   0}:2048, \wbox{0000}{   0}:\wbox{0000}{2096}
+  &\wbox{0000}{   0}:2048, \wbox{0000}{   0}:\wbox{0000}{  48}
+  &\wbox{0000}{   0}:2048, \wbox{0000}{  48}:\wbox{0000}{2096}
+  \\
+\code{4kx4k}&1&1
+  &\wbox{0000}{   0}:2048, \wbox{0000}{2096}:\wbox{0000}{4192}
+  &\wbox{0000}{   0}:2048, \wbox{0000}{4144}:\wbox{0000}{4192}
+  &\wbox{0000}{   0}:2048, \wbox{0000}{2096}:\wbox{0000}{4144}
+  \\
+\code{4kx4k}&1&2
+  &\wbox{0000}{2048}:4096, \wbox{0000}{   0}:\wbox{0000}{2096}
+  &\wbox{0000}{2048}:4096, \wbox{0000}{  48}:\wbox{0000}{2096}
+  &\wbox{0000}{2048}:4096, \wbox{0000}{  48}:\wbox{0000}{2096}
+  \\
+\code{4kx4k}&1&3
+  &\wbox{0000}{2048}:4096, \wbox{0000}{2096}:\wbox{0000}{4192}
+  &\wbox{0000}{2048}:4096, \wbox{0000}{4144}:\wbox{0000}{4192}
+  &\wbox{0000}{2048}:4096, \wbox{0000}{2096}:\wbox{0000}{4144}
+  \\
+\code{4kx4k}&1&All
+  &
+  &
+  &\wbox{0000}{   0}:4096, \wbox{0000}{  48}:\wbox{0000}{4144}
+  \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+If you wish to carry out this step yourself on raw \code{4kx4k} images with binning 1, the engineering team recommends this code:
+\begin{quote}\footnotesize\begin{verbatim}
+import astropy.stats
+p0 = astropy.stats.sigma_clipped_stats(data[   0:2048,   0:  48])[0]
+p1 = astropy.stats.sigma_clipped_stats(data[   0:2048,4144:4192])[0]
+p2 = astropy.stats.sigma_clipped_stats(data[2048:4096,   0:  48])[0]
+p3 = astropy.stats.sigma_clipped_stats(data[2048:4096,4144:4192])[0]
+data[   0:2048,   0:2096] -= p0
+data[   0:2048,2096:4192] -= p1
+data[2048:4096,   0:2096] -= p2
+data[2048:4098,2096:4192] -= p3
+data = data[0:4096,48:4144]
+\end{verbatim}\end{quote}
+
+Conventional bias pedestal correction is not possible for images taken with the \code{2kx2k} and \code{1kx1k} windows as they do not include underscan regions.
+
+\subsection{Residual Bias and Dark Correction}
+
+We recommend a slightly non-standard approach to residual bias and dark correction: instead of subtracting a residual bias and a scaled dark image, subtract a dark image of the same exposure time. The reason is that we suspect that the residual bias levels of images taken in rapid succession vary at the level of $\pm 0.3$ DN \citep{ohp}. Furthermore, the detectors are operated at $-110$~C and their median dark current is essentially unmeasurable.
+
+\section{Orientation on Sky}
+
+To simplify cable handling, the telescope derotator is only capable of rotating the DDRAGO instrument through $\pm65$ degrees. This means that we cannot maintain the same field orientation on the detector at all positions. However, we step the derotator offset in multiples of 90 degrees so that North is always approximately aligned with either the columns or rows. The value of the derotator offset is given in the SMTMRO record in the image header.
+
+If you wish to correct the orientation of raw data yourself, the engineering team recommends this code:
+\begin{quote}\footnotesize\begin{verbatim}
+rotation = header["SMTMRO"]
+data = np.rot90(data, -int(rotation / 90))
+\end{verbatim}\end{quote}
+
+The center of rotation is close to but not precisely coincident with the center of the detector.
