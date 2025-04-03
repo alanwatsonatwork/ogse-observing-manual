@@ -34,11 +34,9 @@ The controller offers a single read mode with a read frequency of 8~MHz and a de
 % \end{center}
 % \end{figure}
 
-The detector has a active area of  $4096~\mbox{columns} \times 4096~\mbox{rows}$. The controller by default reads $4152~\mbox{columns} \times 4128~\mbox{rows}$ divided into two halves. 
+The detector has a active area of  $4096~\mbox{columns} \times 4096~\mbox{rows}$. The controller by default reads $4152~\mbox{columns} \times 4128~\mbox{rows}$ through a single amplifier. 
 
 % This is shown in Figure~\ref{figure:format}.
-
-Each quadrant of the detector has slightly different bias level and gain, and this gives a clear pattern in raw exposures. However, subtracting the underscan level and residual bias and dividing by a flat field largely removes these differences.
 
 The controller allows us to define windows provided they are centered on the detector. We define three windows that we expect will be useful for science, named \code{4kx4k}, \code{2kx2k}, and \code{1kx1k}, described below.
 % and shown in Figure~\ref{figure:format}. 
@@ -46,12 +44,14 @@ Each window can be used with a binning of 1, 2, or 4 pixels (both vertically and
 
 \begin{itemize}
 \item 
-The \code{4kx4k} window has an active area of $4096~\mbox{columns} \times 4096~\mbox{rows}$, with 36 columns of underscan at the start and 20 at the end of each row and with 22 rows of underscan at the start of each column and 10 at the end giving a total size of $4152~\mbox{columns} \times 4128~\mbox{rows}$.
+The \code{4kx4k} window has an active area of $4096~\mbox{columns} \times 4096~\mbox{rows}$, with 36 columns of before the active area and 20 after it and with 22 rows before the active area and 10 rows after it, giving a total size of $4152~\mbox{columns} \times 4128~\mbox{rows}$.
 \item
 The \code{2kx2k} window has an active area of $2048~\mbox{columns} \times 2048~\mbox{rows}$, centered on the detector, without underscan.
 \item
 The \code{1kx1k} window has an active area of $1024~\mbox{columns} \times 1024~\mbox{rows}$, centered on the detector, without underscan.
 \end{itemize}
+
+In the \code{4kx4k} window, the first 11 columns are conventional underscan, the next four pixels are test pixel, and the remaining pixels outside the active area are mainly dark reference pixels \cite[for details, see][]{onsemi}. We recommend using the first 10 columns for bias pedestal correction.
 
 \begin{table}[pb]
 \begin{center}
